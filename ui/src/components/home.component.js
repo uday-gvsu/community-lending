@@ -11,6 +11,8 @@ class Home extends Component {
       loading: true,
       error: null,
       isLoggedIn: false,
+      redirectToCheckout: false,
+      selectedItem: null,
     };
   }
 
@@ -40,10 +42,30 @@ class Home extends Component {
     }
   }
 
-  render() {
-    const { items, loading, error, isLoggedIn } = this.state;
+  // Handle checkout and navigate to checkout page
+  handleCheckout = (item) => {
+    this.setState({
+      selectedItem: item,
+      redirectToCheckout: true,
+    });
+    sessionStorage.setItem('item', JSON.stringify(item));
+  };
 
-    // Redirect to home if login is successful
+  render() {
+    const { items, loading, error, isLoggedIn, redirectToCheckout, selectedItem } =
+      this.state;
+
+    // Redirect to checkout page with selected item
+    if (redirectToCheckout && selectedItem) {
+      return (
+        <Navigate
+          to="/checkout"
+          state={{ item: selectedItem }} // Pass selected item data to checkout page
+        />
+      );
+    }
+
+    // Redirect to home if not logged in
     if (isLoggedIn) {
       return <Navigate to="/" />;
     }
@@ -78,7 +100,7 @@ class Home extends Component {
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item">
                   <button
-                    className="nav-link bg-red-500 px-3 py-1 rounded-lg hover:bg-red-600 transition"
+                    className="nav-link bg-red-500 px-3 py-1 rounded-lg text-white hover:bg-red-600 transition"
                     onClick={this.handleLogout}
                   >
                     Logout
@@ -99,20 +121,29 @@ class Home extends Component {
           ) : (
             <div className="row">
               {items.map((item) => (
-                <div key={item.id} className="col-4 col-sm-4 col-lg-4 mb-4">
-                  <div className="p-6 bg-white rounded-3xl shadow-xl hover:shadow-lg transition transform text-left" style={{ padding: "20px", borderRadius: "5px" }}>
+                <div key={item._id} className="col-12 col-sm-6 col-lg-4 mb-4">
+                  <div
+                    className="p-6 bg-white rounded-3xl shadow-xl hover:shadow-lg transition transform text-left"
+                    style={{ padding: "20px", borderRadius: "5px" }}
+                  >
                     <h3 className="font-semibold text-lg text-gray-800">
                       {item.name}
                     </h3>
                     <p className="text-sm text-gray-600 mb-2">
                       {item.description}
                     </p>
-                    <p className="text-sm text-gray-700 font-medium">
+                    <p className="text-sm text-gray-700 font-medium mb-1">
                       💰 Price: ${item.price}
                     </p>
-                    <p className="text-sm text-yellow-500 font-medium">
+                    <p className="text-sm text-yellow-500 font-medium mb-3">
                       ⭐ Rating: {item.rating} / 5
                     </p>
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => this.handleCheckout(item)}
+                    >
+                      Borrow Item
+                    </button>
                   </div>
                 </div>
               ))}

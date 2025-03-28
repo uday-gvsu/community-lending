@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import Login from './components/login.component'
 import SignUp from './components/signup.component'
 import Home from './components/home.component'
+import Checkout from "./components/checkout.component";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -30,6 +31,7 @@ function App() {
         <Route path="/sign-in" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/home" element={<Home />} />
+        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );
