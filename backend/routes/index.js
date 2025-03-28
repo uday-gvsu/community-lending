@@ -4,6 +4,8 @@ var User = require('../db/user');
 var Item = require('../db/item');
 var Order = require('../db/order');
 
+var mongoose = require('mongoose')
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Community Lending App' });
@@ -70,13 +72,72 @@ router.post("/items/orders", async function(req, res){
   }
 });
 
-router.get("/items/orders", async function(req, res){
+router.get("/items/orders", async (req, res) => {
   try {
-    const orders = await Order.findOne({id: req.id});
+    const orders = await Order.aggregate([
+      {
+        $match: {
+          borrowerId: new mongoose.Types.ObjectId(req.query.id), // Match orders for current user
+        },
+      },
+      {
+        $addFields: {
+          itemId: { $toObjectId: "$itemId" }, // Convert string to ObjectId
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "ownerId",
+          foreignField: "_id",
+          as: "ownerDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: "items",
+          localField: "itemId",
+          foreignField: "_id",
+          as: "itemDetails",
+        },
+      },
+      {
+        $unwind: "$itemDetails",
+      },
+      {
+        $unwind: "$ownerDetails",
+      },
+      {
+        $project: {
+          _id: 1,
+          itemId: 1,
+          borrowerId: 1,
+          itemName: "$itemDetails.name",
+          itemDescription: "$itemDetails.description",
+          itemPrice: "$itemDetails.price",
+          ownerName: "$ownerDetails.firstName",
+          ownerEmail: "$ownerDetails.email",
+          borrowedAt: 1,
+          numberOfDays: 1,
+          price: 1,
+          rating: 1,
+        },
+      },
+    ]);
+
+    console.log(orders.length)
+
+    if (!orders.length) {
+      return res.status(404).send({ message: "No orders found for this user." });
+    }
+
     res.status(200).send(orders);
   } catch (error) {
-    res.status(500).send(error);
+    console.error("❗️ Error fetching orders:", error);
+    res.status(500).send({ error: "Error fetching orders. Try again later." });
   }
-});
+}
+
+);
 
 module.exports = router;

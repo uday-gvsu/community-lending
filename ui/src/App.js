@@ -6,6 +6,7 @@ import Login from './components/login.component'
 import SignUp from './components/signup.component'
 import Home from './components/home.component'
 import Checkout from "./components/checkout.component";
+import Orders from "./components/orders.component";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,11 +28,12 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Login />} />
+        <Route exact path="/" element={<Home />} />
         <Route path="/sign-in" element={<Login />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/home" element={<Home />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/orders" element={<Orders />} />
       </Routes>
     </Router>
   );

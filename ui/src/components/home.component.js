@@ -13,6 +13,7 @@ class Home extends Component {
       isLoggedIn: false,
       redirectToCheckout: false,
       selectedItem: null,
+      redirectToOrders: false
     };
   }
 
@@ -51,8 +52,15 @@ class Home extends Component {
     sessionStorage.setItem('item', JSON.stringify(item));
   };
 
+    // Handle checkout and navigate to checkout page
+    handleOrders = () => {
+        this.setState({
+            redirectToOrders: true,
+        });
+    };
+
   render() {
-    const { items, loading, error, isLoggedIn, redirectToCheckout, selectedItem } =
+    const { items, loading, error, isLoggedIn, redirectToCheckout, selectedItem, redirectToOrders } =
       this.state;
 
     // Redirect to checkout page with selected item
@@ -63,6 +71,12 @@ class Home extends Component {
           state={{ item: selectedItem }} // Pass selected item data to checkout page
         />
       );
+    }
+
+    if (redirectToOrders) {
+        return (
+            <Navigate to="/orders" />
+        );
     }
 
     // Redirect to home if not logged in
@@ -98,6 +112,14 @@ class Home extends Component {
             </Link>
             <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
               <ul className="navbar-nav ms-auto">
+              <li className="nav-item">
+                  <button
+                    className="nav-link bg-red-500 px-3 py-1 rounded-lg  hover:bg-red-600 transition"
+                    onClick={this.handleOrders}
+                  >
+                    Orders
+                  </button>
+                </li>
                 <li className="nav-item">
                   <button
                     className="nav-link bg-red-500 px-3 py-1 rounded-lg  hover:bg-red-600 transition"

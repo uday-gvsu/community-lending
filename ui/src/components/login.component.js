@@ -46,6 +46,7 @@ export default class Login extends Component {
       // If login is successful, redirect to home
       if (response.status === 201) {
         localStorage.setItem("loggedIn", true);
+        localStorage.setItem('id', response.data.id);
         this.setState({ redirect: true });
       }
     } catch (error) {
