@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from 'react-router-dom';
 
 export default class SignUp extends Component {
   constructor(props) {
@@ -80,7 +80,33 @@ export default class SignUp extends Component {
     }
 
     return (
-      <form onSubmit={this.callSignup}>
+      <div className="App">
+      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+        <div className="container">
+          <Link className="navbar-brand" to={'/sign-in'}>
+            Community Lending App
+          </Link>
+          <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul className="navbar-nav ms-auto">
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link" to={"/sign-in"}>
+                      Login
+                    </Link>
+                  </li>
+                  <li className="nav-item">
+                    <Link className="nav-link" to={"/sign-up"}>
+                      Sign up
+                    </Link>
+                  </li>
+                </>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div className="auth-wrapper">
+        <div className="auth-inner">
+        <form onSubmit={this.callSignup}>
         <h3>Sign Up</h3>
 
         {/* Show error message if there's one */}
@@ -152,6 +178,12 @@ export default class SignUp extends Component {
           Already registered? <a href="/sign-in">Sign in</a>
         </p>
       </form>
+        </div>
+      </div>
+    </div>
+
+
+      
     );
   }
 }
