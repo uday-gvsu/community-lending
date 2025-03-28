@@ -100,7 +100,7 @@ class Home extends Component {
               <ul className="navbar-nav ms-auto">
                 <li className="nav-item">
                   <button
-                    className="nav-link bg-red-500 px-3 py-1 rounded-lg text-white hover:bg-red-600 transition"
+                    className="nav-link bg-red-500 px-3 py-1 rounded-lg  hover:bg-red-600 transition"
                     onClick={this.handleLogout}
                   >
                     Logout
