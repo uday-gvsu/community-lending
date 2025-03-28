@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, redirect } from 'react-router-dom'
 
 export default class Login extends Component {
   constructor(props) {
