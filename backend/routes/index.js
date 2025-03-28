@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var User = require('../db/user')
+var User = require('../db/user');
+var Item = require('../db/item');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -37,6 +38,26 @@ router.post("/login", async function(req, res){
     } catch (error) {
       res.status(400).json({ error });
     }
+});
+
+router.post('/items', async (req, res) => {
+  try {
+    const item = new Item(req.body);
+    await item.save();
+    res.status(201).send(item);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+
+router.get("/items", async function(req, res){
+  try {
+    const items = await Item.find();
+    res.status(200).send(items);
+  } catch (error) {
+    res.status(500).send(error);
+  }
 });
 
 module.exports = router;
