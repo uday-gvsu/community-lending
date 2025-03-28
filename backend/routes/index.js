@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../db/user');
 var Item = require('../db/item');
+var Order = require('../db/order');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -28,7 +29,7 @@ router.post("/login", async function(req, res){
         console.log(req.body.password, user.password)
         const result = req.body.password === user.password;
         if (result) {
-          res.status(201).json({ message: 'User logged in successfully' });
+          res.status(201).json({ message: 'User logged in successfully', id: user.id });
         } else {
           res.status(400).json({ error: "password doesn't match" });
         }
@@ -50,11 +51,29 @@ router.post('/items', async (req, res) => {
   }
 });
 
-
 router.get("/items", async function(req, res){
   try {
     const items = await Item.find();
     res.status(200).send(items);
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+router.post("/items/orders", async function(req, res){
+  try {
+    const order = new Order(req.body);
+    await order.save();
+    res.status(201).send(order);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+
+router.get("/items/orders", async function(req, res){
+  try {
+    const orders = await Order.findOne({id: req.id});
+    res.status(200).send(orders);
   } catch (error) {
     res.status(500).send(error);
   }
